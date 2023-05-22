@@ -1,43 +1,39 @@
 #include "ft_malloc.h"
 
-static int		isInPageSection( t_page *page )
+static int		rewireBlocksInPage( t_page *page, t_block *block)
 {
-	while (page)
+	if (!block->prev)
 	{
-		if (ptr >= (void*)(page) + sizeof(t_page) && ptr < (void)(page) + computePageSize( page->type ))
-			return (1);
-		page = page->next;
+		page->block = block->next;
+		if (block->next)
+			block->next->prev = NULL;
 	}
-	return (0);
+	else if (block->prev)
+	{
+		block->prev->next = block->next;
+		if (block->next)
+			block->next->prev = block->prev;
+	}
+	if (!page->block)
+		return (0);
+	return (1); // Used to munmap memory if page has now no block
 }
 
-// Get section in which ptr has it's address located
-// 0 : tiny | 1 : small | 2 : large | -1 : none
-static int		getValidAddressSection( void *ptr )
+static void		freeAddrInPage( t_page *page, void *ptr )
 {
-	int res;
+	int	res;
 
-	if ((res = isInPageSection( g_alloc.tiny )) == 1)
-		return (0);
-	if ((res = isInPageSection( g_alloc.tiny )) == 1)
-		return (1);
-	if ((res = isInPageSection( g_alloc.tiny )) == 1)
-		return (2);
-	return (-1);
+	res = 0;
+	if (page)
+	{
+		res = rewireBlocksInPage( page, (t_block*)(ptr - sizeof(t_block)) );
+		if (!res)
+			return ; // munmap() to deallocate empty page memory Must rewire pages
+	}
 }
 
 void	ft_free( void *ptr )
 {
-	t_block *block;
-
-	block = NULL;
-	if (getValidAddressSection( ptr ) >= 0)
-	{
-		block = (t_block*)(ptr - sizeof(t_block));
-		if (block->checkcode == -421)
-		{
-			// Get previous block and rewire with next block
-			// Then remove this current block
-		}
-	}
+	if (ptr)
+		freeAddrInPage( isValidAllocatedBasedPtr( ptr ), ptr );
 }

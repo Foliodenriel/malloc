@@ -12,7 +12,7 @@ FLAGS			= -Wall -Wextra -Werror
 
 INCLUDES		= -Iincludes/ -Ilibft/includes/
 
-SRCS			= ft_malloc.c allocate.c ft_alloc_helper.c ft_free.c
+SRCS			= ft_malloc.c ft_allocate.c ft_alloc_helper.c ft_free.c ft_realloc.c
 
 OBJS			= $(SRCS:.c=.o)
 
@@ -29,12 +29,13 @@ $(NAME):
 	@$(CC) -shared -o $(NAME) $(OBJS) libft/*.o
 	@echo -n "\r80% - cleaning libft folder"
 	@make fclean -C libft/
+	@make clean
 	@echo -n "\r99% - linking dynamic library"
 	@ln -s $(NAME) $(NAME_LINK)
 	@echo "\rComplete!"
 
 test:
-	$(CC) main.c -L/mnt/c/Users/alexi/Desktop/Work/Dev/Langage/C/malloc -lft_malloc $(INCLUDES)
+	$(CC) -g main.c -L/mnt/c/Users/alexi/Desktop/Work/Dev/Langage/C/malloc -lft_malloc $(INCLUDES)
 	
 
 re: fclean all

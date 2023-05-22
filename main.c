@@ -8,34 +8,45 @@
 
 int main(void)
 {
-    char    *data;
-    size_t  i;
+    char    *data1;
 
-    i = 0;
-    data = NULL;
-    data = (char*)malloc(10);
-    while (i < 9)
-    {
-        data[i] = 'a';
-        i++;
-    }
-    data[9] = '\0';
+    // data1 = NULL;
 
-    printf("%s\n", data);
+    ft_printf("t_block (%lu)\n", sizeof(t_block));
+    ft_printf("t_page (%lu)\n\n", sizeof(t_page));
 
-    free(&data[5]);
+    data1 = (char*)ft_malloc( 10 );
+    data1[0] = 'H';
+    data1[1] = 'e';
+    data1[2] = 'l';
+    data1[3] = 'l';
+    data1[4] = 'o';
+    data1[5] = ' ';
+    data1[6] = 'g';
+    data1[7] = 'u';
+    data1[8] = 'y';
+    data1[9] = '\0';
 
-    printf("%s\n", data);
+    show_memory( );
 
+    ft_printf("Phrase : %s\n", data1);
 
+    // printf("%p\n", data1);
 
-    // data = ft_malloc( 10 );
+    // data2 = ft_malloc( 20 );
+    // printf("%p\n", data2);
 
-    // printf("%p\n", data);
+    // data3 = ft_malloc( 10 );
+    // printf("%p\n", data3);
 
-    // data = ft_malloc( 20 );
+    // show_memory();
 
-    // printf("%p\n", data);
+    // ft_free( data2 );
+
+    // show_memory();
+
+    // data2 = ft_malloc( 136 );
+    // printf("%p\n", data2);
 
     // show_memory();
     return (0);

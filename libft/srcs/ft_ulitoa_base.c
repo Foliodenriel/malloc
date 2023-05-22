@@ -51,6 +51,7 @@ char            *ft_ulitoa_base(unsigned long int n, int base)
         return (NULL);
     len = ft_itoa_base_length(n, base);
     s = (char*)malloc(sizeof(char) * (len + 1));
+    ft_bzero(s, len + 1);
     if (!s)
         return (NULL);
     if (n == 0)

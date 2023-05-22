@@ -29,7 +29,7 @@ OBJS			=	$(SRCS_BASE:.c=.o) \
 				$(SRCS_PRINTF:.c=.o) \
 				$(SRCS_GNL:.c=.o) \
 
-CC			= gcc
+CC			= gcc -g
 
 all: $(OBJS)
 

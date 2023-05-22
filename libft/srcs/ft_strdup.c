@@ -8,7 +8,7 @@ char    *ft_strdup(const char *s)
     if (!s)
         return (NULL);
     len = ft_strlen(s);
-    bytes = (char*)malloc(sizeof(char) * len);
+    bytes = (char*)malloc(sizeof(char) * len + 1);
     ft_strlcpy(bytes, s, len + 1);
     return (bytes);
 }

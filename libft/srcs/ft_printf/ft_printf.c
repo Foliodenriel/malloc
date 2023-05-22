@@ -1,4 +1,5 @@
 #include "ft_printf.h"
+#include <stdio.h>
 
 static t_printarg   *ft_printarg_new(char *s, enum e_flag flag)
 {
@@ -51,13 +52,16 @@ static void         ft_printf_parse(va_list vl, t_list *lst)
     s = NULL;
     while (lst)
     {
-        tmp = s;
         arg = lst->content;
         if (arg && (arg->flag & FT_PRINTF_ARG))
         {
+            tmp = arg->s;
             ft_printf_fill(vl, arg);
             ft_printf_compute(arg);
+            if (tmp && (tmp != arg->s))
+                free(tmp);
         }
+        tmp = s;
         s = ft_strjoin(s, arg->s);
         if (tmp && (tmp != s))
             free(tmp);
@@ -67,6 +71,13 @@ static void         ft_printf_parse(va_list vl, t_list *lst)
     }
     ft_putstr_fd(s, 1);
     free(s);
+}
+
+static void         ft_printf_free(void *content)
+{
+    t_printarg *arg = (t_printarg*)content;
+
+    free(content);
 }
 
 int                 ft_printf(const char *format, ...)
@@ -82,6 +93,8 @@ int                 ft_printf(const char *format, ...)
     while ((e = ft_printf_getnext(&s)))
         ft_lstadd_back(&lst, e);
     ft_printf_parse(vl, lst);
+    ft_lstclear(&lst, ft_printf_free);
+
     va_end(vl);
     return (1);
 }
