@@ -35,7 +35,7 @@ $(NAME):
 	@echo "\rComplete!"
 
 test:
-	$(CC) -g main.c -L/mnt/c/Users/alexi/Desktop/Work/Dev/Langage/C/malloc -lft_malloc $(INCLUDES)
+	$(CC) -g main.c -L . -lft_malloc $(INCLUDES)
 	
 
 re: fclean all

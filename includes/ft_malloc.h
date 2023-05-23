@@ -31,25 +31,27 @@ typedef struct          s_page
 {
     t_block             *block;
     e_pagesizetype      type; // 0 tiny | 1 small | 2 large
+    size_t              size;
     struct s_page       *next;
     struct s_page       *prev;
 }                       t_page;
 
 // Global variable structure
-typedef struct          s_alloc
+typedef struct   s_alloc
 {
     t_page              *tiny;
     t_page              *small;
     t_page              *large;
 }                       t_alloc;
 
-t_alloc                 g_alloc;
+extern t_alloc                 g_alloc;
 
 // Side functions
 t_page                  *isValidAllocatedBasedPtr( void *ptr );
 size_t                  computePageSize( e_pagesizetype pagesize, size_t size );
 e_pagesizetype	        getTypeFromSize( size_t size );
 void                    show_memory( );
+void            		show_memory_ex( );
 
 // Main functions
 void                    *ft_allocate( t_page **page, size_t size, e_pagesizetype type );

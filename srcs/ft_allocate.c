@@ -1,5 +1,7 @@
 #include "ft_malloc.h"
 
+t_alloc g_alloc;
+
 static t_page   *getLastPage( t_page *page )
 {
     while (page && page->next)
@@ -7,12 +9,13 @@ static t_page   *getLastPage( t_page *page )
     return (page);
 }
 
-static t_page   *createNewPage( t_page *page, e_pagesizetype type, t_page *n, t_page *p )
+static t_page   *createNewPage( t_page *page, e_pagesizetype type, t_page *n, t_page *p, size_t size )
 {
     page->block = NULL;
     page->type = type;
     page->next = n;
     page->prev = p;
+    page->size = size;
     return (page);
 }
 
@@ -104,9 +107,10 @@ void            *ft_allocate( t_page **firstpage, size_t size, e_pagesizetype ty
 {
     t_page  *page;
     void    *data;
-
+    size_t  page_size;
 
     data = NULL;
+    page_size = 0;
     page = *firstpage;
     // Try allocate in already existing page except if type is LARGE
     if (type != PAGESIZETYPE_LARGE)
@@ -120,10 +124,11 @@ void            *ft_allocate( t_page **firstpage, size_t size, e_pagesizetype ty
         }
     }
     // Allocate new page (always when type is LARGE)
-    data = mmap(NULL, computePageSize( type, size ), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    page_size = computePageSize( type, size );
+    data = mmap(NULL, page_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (data)
     {
-        page = createNewPage( (t_page*)data, type, NULL, getLastPage( *firstpage ) );
+        page = createNewPage( (t_page*)data, type, NULL, getLastPage( *firstpage ), page_size );
         addNewPage( firstpage, page );
         data = queryDataSpace( page, size );
     }

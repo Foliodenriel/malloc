@@ -72,7 +72,41 @@ t_page			*isValidAllocatedBasedPtr( void *ptr )
 	return (NULL);
 }
 
-static size_t	show_memory_blocks( t_page *page )
+void			print_memory( void *data, size_t size, size_t len)
+{
+	unsigned char	*bytes;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	bytes = (unsigned char*)data;
+	while (i < size)
+	{
+		j = 0;
+		ft_printf("0x%p\t:\t", &bytes[i]);
+		while (j < len)
+		{
+			ft_printf("%0.2x ", bytes[i]);
+			j++;
+			i++;
+		}
+		i -= j;
+		j = 0;
+		ft_printf("\t");
+		while (j < len)
+		{
+			if (ft_isalnum( bytes[i]))
+				ft_printf("%c ", bytes[i]);
+			else
+				ft_printf(". ");
+			i++;
+			j++;
+		}
+		ft_printf("\n");
+	}
+}
+
+static size_t	show_memory_blocks( t_page *page, int opt )
 {
 	t_block	*block;
 	size_t	total;
@@ -88,6 +122,8 @@ static size_t	show_memory_blocks( t_page *page )
 			{
 				total += block->size;
 				ft_printf("%p - %p : %lu bytes\n", (void*)((void*)block + sizeof(t_block)), (void*)((void*)block + sizeof(t_block) + block->size), block->size);
+				if (opt)
+					print_memory( block->data, block->size, opt );
 				block = block->next;
 			}
 		}
@@ -104,17 +140,40 @@ void			show_memory()
 	if (g_alloc.tiny)
 	{
 		ft_printf("TINY : %p\n", g_alloc.tiny);
-		total += show_memory_blocks( g_alloc.tiny );
+		total += show_memory_blocks( g_alloc.tiny, 0 );
 	}
 	if (g_alloc.small)
 	{
 		ft_printf("SMALL : %p\n", g_alloc.small);
-		total += show_memory_blocks( g_alloc.small );
+		total += show_memory_blocks( g_alloc.small, 0 );
 	}
 	if (g_alloc.large)
 	{
 		ft_printf("LARGE : %p\n", g_alloc.large);
-		total += show_memory_blocks( g_alloc.large );
+		total += show_memory_blocks( g_alloc.large, 0 );
+	}
+	ft_printf("Total : %lu\n\n", total);
+}
+
+void		show_memory_ex( )
+{
+	size_t	total;
+
+	total = 0;
+	if (g_alloc.tiny)
+	{
+		ft_printf("TINY : %p\n", g_alloc.tiny);
+		total += show_memory_blocks( g_alloc.tiny, 8 );
+	}
+	if (g_alloc.small)
+	{
+		ft_printf("SMALL : %p\n", g_alloc.small);
+		total += show_memory_blocks( g_alloc.small, 8 );
+	}
+	if (g_alloc.large)
+	{
+		ft_printf("LARGE : %p\n", g_alloc.large);
+		total += show_memory_blocks( g_alloc.large, 8 );
 	}
 	ft_printf("Total : %lu\n\n", total);
 }
