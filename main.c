@@ -6,41 +6,44 @@
 #include "ft_malloc.h"
 #include <libft.h>
 
+#include <pthread.h>
+
+struct test
+{
+    char    s[163];
+};
+
+void    *thread_malloc()
+{
+    ft_malloc( 10 );
+}
+
+unsigned int    ft_align(unsigned int i, unsigned int alignto)
+{
+    unsigned int    mask;
+    size_t          offset;
+
+    offset = 0;
+    mask = (unsigned int)(0 - 1);
+    while ((alignto & 1) != 1)
+    {
+        alignto = alignto >> 1;
+        offset++;
+    }
+    mask = mask << offset;
+    i = (i & mask) == i ? i & mask : (i & mask) + (alignto << offset); 
+    return (i);
+}
+
 int main(void)
 {
-    char    *data1;
-    void    *data2;
-    void    *data3;
+    unsigned int    i;
 
-    ft_printf("t_block (%lu)\n", sizeof(t_block));
-    ft_printf("t_page (%lu)\n\n", sizeof(t_page));
+    i = 97;
+    i = ft_align(i, 8);
+    ft_printf("aligned : %u\n", i);
 
-    data1 = ft_malloc( 10 );
-    data2 = ft_malloc( 20 );
-
-    show_memory( );
-
-    ft_free( data1+5 );
-
-    show_memory( );
-
-    ft_free( data1 );
-
-    show_memory( );
-
-    data3 = ft_malloc( 272 );
-
-    show_memory( );
-
-    data1 = ft_malloc( 8 );
-
-    show_memory( );
-
-    ft_free( data1 );
-    ft_free( data2 );
-    ft_free( data3 );
-
-    show_memory( );
+    show_alloc_mem_ex( 8 );
     
     return (0);
 }

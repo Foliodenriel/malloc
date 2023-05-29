@@ -24,7 +24,7 @@ $(NAME):
 	@echo -n "\r20% - libft compiling"
 	@make -C libft
 	@echo -n "\r40% - compiling obj files"
-	@$(CC) -c $(FLAGS) -fpic $(addprefix srcs/, $(SRCS)) $(INCLUDES)
+	@$(CC) -c $(FLAGS) -fpic -pthread $(addprefix srcs/, $(SRCS)) $(INCLUDES)
 	@echo -n "\r60% - creating dynamic library"
 	@$(CC) -shared -o $(NAME) $(OBJS) libft/*.o
 	@echo -n "\r80% - cleaning libft folder"
@@ -36,7 +36,10 @@ $(NAME):
 
 test:
 	$(CC) -g main.c -L . -lft_malloc $(INCLUDES)
-	
+
+thread:
+	$(CC) -g main.c -L . -lft_malloc -pthread $(INCLUDES)
+
 
 re: fclean all
 

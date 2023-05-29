@@ -62,5 +62,9 @@ static void		freeAddrInPage( t_page *page, void *ptr )
 void	ft_free( void *ptr )
 {
 	if (ptr)
+	{
+		pthread_mutex_lock(&g_alloc_mutex);
 		freeAddrInPage( isValidAllocatedBasedPtr( ptr ), ptr );
+		pthread_mutex_unlock(&g_alloc_mutex);
+	}
 }

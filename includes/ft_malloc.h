@@ -4,8 +4,7 @@
 # include "libft.h"
 # include "ft_printf.h"
 # include <sys/mman.h>
-
-# include <stdio.h>
+# include <pthread.h>
 
 # define MALLOC_PAGE_SIZE getpagesize()
 
@@ -37,21 +36,29 @@ typedef struct          s_page
 }                       t_page;
 
 // Global variable structure
-typedef struct   s_alloc
+typedef struct          s_alloc
 {
     t_page              *tiny;
     t_page              *small;
     t_page              *large;
 }                       t_alloc;
 
-extern t_alloc                 g_alloc;
+// typedef struct          s_alloc_mutex
+// {
+//     pthread_mutex_t     mutex;
+//     char                initialized;
+// }                       t_alloc_mutex;
+
+extern t_alloc          g_alloc;
+// extern t_alloc_mutex    g_alloc_mutex;
+extern pthread_mutex_t  g_alloc_mutex;
 
 // Side functions
 t_page                  *isValidAllocatedBasedPtr( void *ptr );
 size_t                  computePageSize( e_pagesizetype pagesize, size_t size );
 e_pagesizetype	        getTypeFromSize( size_t size );
-void                    show_memory( );
-void            		show_memory_ex( );
+void                    show_alloc_mem( );
+void            		show_alloc_mem_ex( size_t size );
 
 // Main functions
 void                    *ft_allocate( t_page **page, size_t size, e_pagesizetype type );

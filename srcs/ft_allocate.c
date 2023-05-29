@@ -1,7 +1,5 @@
 #include "ft_malloc.h"
 
-t_alloc g_alloc;
-
 static t_page   *getLastPage( t_page *page )
 {
     while (page && page->next)

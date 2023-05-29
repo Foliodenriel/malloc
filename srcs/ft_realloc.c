@@ -59,6 +59,7 @@ void        *ft_realloc( void *ptr, size_t size )
 	void	*new_ptr;
 
 	new_ptr = NULL;
+	pthread_mutex_lock(&g_alloc_mutex);
 	if (size == 0 && ptr)
 	{
 		ft_free( new_ptr );
@@ -76,5 +77,6 @@ void        *ft_realloc( void *ptr, size_t size )
 
 	if (ptr && new_ptr && (ptr != new_ptr))
 		ft_free(ptr); // Free old pointer if new_ptr is at some other place in memory
+	pthread_mutex_unlock(&g_alloc_mutex);
 	return (new_ptr);
 }

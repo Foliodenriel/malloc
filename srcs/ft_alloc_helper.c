@@ -83,10 +83,13 @@ void			print_memory( void *data, size_t size, size_t len)
 	while (i < size)
 	{
 		j = 0;
-		ft_printf("0x%p\t:\t", &bytes[i]);
+		ft_printf("%p [ +%-10lu ]:\t", &bytes[i], i);
 		while (j < len)
 		{
-			ft_printf("%0.2x ", bytes[i]);
+			if (i < size)
+				ft_printf("%0.2x ", bytes[i]);
+			else
+				ft_printf("-- ");
 			j++;
 			i++;
 		}
@@ -106,7 +109,7 @@ void			print_memory( void *data, size_t size, size_t len)
 	}
 }
 
-static size_t	show_memory_blocks( t_page *page, int opt )
+static size_t	show_memory_blocks( t_page *page, size_t opt )
 {
 	t_block	*block;
 	size_t	total;
@@ -132,7 +135,7 @@ static size_t	show_memory_blocks( t_page *page, int opt )
 	return (total);
 }
 
-void			show_memory()
+void			show_alloc_mem()
 {
 	size_t	total;
 
@@ -155,7 +158,7 @@ void			show_memory()
 	ft_printf("Total : %lu\n\n", total);
 }
 
-void		show_memory_ex( )
+void		show_alloc_mem_ex( size_t size )
 {
 	size_t	total;
 
@@ -163,17 +166,17 @@ void		show_memory_ex( )
 	if (g_alloc.tiny)
 	{
 		ft_printf("TINY : %p\n", g_alloc.tiny);
-		total += show_memory_blocks( g_alloc.tiny, 8 );
+		total += show_memory_blocks( g_alloc.tiny, size );
 	}
 	if (g_alloc.small)
 	{
 		ft_printf("SMALL : %p\n", g_alloc.small);
-		total += show_memory_blocks( g_alloc.small, 8 );
+		total += show_memory_blocks( g_alloc.small, size );
 	}
 	if (g_alloc.large)
 	{
 		ft_printf("LARGE : %p\n", g_alloc.large);
-		total += show_memory_blocks( g_alloc.large, 8 );
+		total += show_memory_blocks( g_alloc.large, size );
 	}
 	ft_printf("Total : %lu\n\n", total);
 }
